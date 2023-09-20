@@ -20,6 +20,13 @@ import java.util.Hashtable;
 /**
  *Boogipop大佬说的野链
  *参考 https://xz.aliyun.com/t/12135
+ *
+ *FastHashMap:equals()
+ *   DefaultedMap:get()
+ *       FactoryTransfomer:transformer() #这里也可以是CloneTransformer的tansformer方法
+ *           InstantiateFactory:create()
+ *               TrAXFilter:构造方法
+ *                   TemplatesImpl:newTransformer()
  */
 public class CCD {
     public static void main(String[] args) throws Exception {
