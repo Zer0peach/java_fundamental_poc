@@ -27,6 +27,11 @@ public class exp {
 
         JSONObject jo = new JSONObject();
         jo.put("1",templatesimpl);
+
+        //JSONArray jsonArray = new JSONArray();
+        //jsonArray.add(templates);
+
+        
         BadAttributeValueExpException exp = new BadAttributeValueExpException(1);
         Field val = Class.forName("javax.management.BadAttributeValueExpException").getDeclaredField("val");
         val.setAccessible(true);
