@@ -1,0 +1,1 @@
+不管什么链，jackson都要重写BaseJsonNode类，删除它的writeReplace方法
