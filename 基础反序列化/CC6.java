@@ -30,6 +30,9 @@ public class demo2 {
         HashMap<Object,Object> hashMap = new HashMap<Object, Object>();
         hashMap.put(tiedMapEntry,"bbb");
 
+        //HashSet<Object> objects = new HashSet<>(1);
+        //objects.add(tiedMapEntry);
+
         lazymap.remove("aaa");
 
         Class c = LazyMap.class;
