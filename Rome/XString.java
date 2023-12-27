@@ -24,8 +24,8 @@ import java.util.Map;
   
   XString#equals
   HotSwappableTargetSource#equals
+  HashMap#putVal
   HashMap#put
-  HashMap#putAll
   HashMap#readObject
 */
 
