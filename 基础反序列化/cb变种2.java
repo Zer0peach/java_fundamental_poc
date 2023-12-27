@@ -17,8 +17,26 @@ import org.apache.commons.collections.bidimap.AbstractDualBidiMap;
 import org.apache.commons.collections.bidimap.DualTreeBidiMap;
 import org.postgresql.ds.PGConnectionPoolDataSource;
 import sun.reflect.ReflectionFactory;
-
 import javax.xml.transform.Templates;
+
+/*
+ *  DualTreeBidiMap利用链
+ 能利用靠的是它本身，我们只是控制数据流的数据而已
+
+ 
+ * 	at org.apache.commons.beanutils.BeanComparator.compare(BeanComparator.java:171)
+	at java.util.TreeMap.compare(TreeMap.java:1291)
+	at java.util.TreeMap.put(TreeMap.java:538)
+	at org.apache.commons.collections.bidimap.AbstractDualBidiMap.put(AbstractDualBidiMap.java:180)
+	at org.apache.commons.collections.bidimap.AbstractDualBidiMap.putAll(AbstractDualBidiMap.java:188)
+	at org.apache.commons.collections.bidimap.DualTreeBidiMap.readObject(DualTreeBidiMap.java:346)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:497)
+ */
+
+
 
 public class cb {
     public static void main(String[] args) throws Exception {
