@@ -45,6 +45,7 @@ public class avoid_error {
         AdvisedSupport advisedSupport = new AdvisedSupport();
         advisedSupport.setTarget(templatesImpl);
         InvocationHandler handler = (InvocationHandler) cons.newInstance(advisedSupport);
+        //动态代理了Templates的所有方法，Templates就getOutputProperties和newTransformer两个方法
         Object proxyObj = Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{Templates.class}, handler);
         POJONode jsonNodes = new POJONode(proxyObj);
 
